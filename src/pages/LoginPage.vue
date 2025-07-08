@@ -99,7 +99,6 @@ async function logarUsuario() {
       echo.connector.options.auth.headers.Authorization = `Bearer ${LocalStorage.getItem('token')}`
       echo.disconnect()
       echo.connect()
-
       router.push('/chat')
     })
   } catch (error) {
