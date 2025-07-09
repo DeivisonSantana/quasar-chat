@@ -15,4 +15,34 @@ const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage(function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload)
+  const transformUrlToResponse = (url) => {
+    const baseUrl = 'https://api.pen6.app/api/v1'
+    if (url.includes('/chat/usuario/')) {
+      return baseUrl + url.replace('/chat/usuario/', '/chat/user/') + '/mensagens'
+    } else if (url.includes('/chat/equipe/')) {
+      return baseUrl + url + '/mensagens'
+    } else if (url.includes('/chat/empresa/')) {
+      return baseUrl + url + '/mensagens'
+    }
+    return baseUrl + url
+  }
+  const notificationTitle = payload.data.title
+  const notificationOptions = {
+    body: payload.data.body,
+    icon: payload.data.image || '/icons/icon-128x128.png',
+    data: {
+      url: payload.data.link || '/',
+      urlToResponse: transformUrlToResponse(payload.data.link),
+    },
+    actions: [
+      {
+        action: 'reply',
+        title: 'Responder',
+        type: 'text',
+        placeholder: 'Digite sua resposta...',
+      },
+    ],
+  }
+
+  self.registration.showNotification(notificationTitle, notificationOptions)
 })

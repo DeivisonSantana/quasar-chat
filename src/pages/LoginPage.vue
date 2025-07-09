@@ -68,6 +68,7 @@ const formRef = ref(null)
 const emailRef = ref(null)
 const passwordRef = ref(null)
 const router = useRouter()
+const disable = ref(false)
 
 const auth = useAuthStore()
 
@@ -104,6 +105,8 @@ async function logarUsuario() {
   } catch (error) {
     console.log(error)
     auth.error = error.response?.data?.message || 'Erro ao fazer login'
+    login.email = ''
+    login.password = ''
   }
 }
 </script>
